@@ -151,15 +151,13 @@ Sakura implements dynamic language switching logic that maps context to user dia
 ```mermaid
 stateDiagram-v2
     [*] --> PrimaryLanguage: Initialize
-    
-    PrimaryLanguage --> PrimaryLanguage: Same Lang Utterance (Count: 1)
-    PrimaryLanguage --> PrimaryLanguage: Same Lang Utterance (Count: 2)
-    
-    PrimaryLanguage --> CandidateLanguage: Foreign Utterance Detected\n(Draft Switch)
-    
-    CandidateLanguage --> PrimaryLanguage: Revert back to original lang\n(False Positive)
-    CandidateLanguage --> NewLanguage: Foreign Utterance Confirmed\n(2nd Utterance)
-    
+
+    PrimaryLanguage --> PrimaryLanguage: Same language utterance
+    PrimaryLanguage --> CandidateLanguage: Foreign utterance detected
+
+    CandidateLanguage --> PrimaryLanguage: Reverted — false positive
+    CandidateLanguage --> NewLanguage: Foreign utterance confirmed
+
     NewLanguage --> [*]: Context, TTS, and STT Updated
 ```
 
